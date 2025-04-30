@@ -1,0 +1,27 @@
+[
+    {
+      "email": "ana.silva@email.com",
+      "idCurso": "CURSO001",
+      "dataMatricula": "2025-03-01",
+      "status": "concluida"
+    },
+    {
+      "email": "joao.souza@email.com",
+      "idCurso": "CURSO002",
+      "dataMatricula": "2025-04-10",
+      "status": "em andamento"
+    },
+    {
+      "email": "maria.oliveira@email.com",
+      "idCurso": "CURSO003",
+      "dataMatricula": "2025-01-15",
+      "status": "cancelada"
+    },
+    {
+      "email": "carlos.pereira@email.com",
+      "idCurso": "CURSO001",
+      "dataMatricula": "2025-02-05",
+      "status": "em andamento"
+    }
+  ]
+  
