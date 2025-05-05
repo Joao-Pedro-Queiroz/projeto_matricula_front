@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import Tabletop from './Tabelinha.jsx'; 
+import Tabletop from './Tabelinha.jsx';
 import './matricula.css';
 import columnsMatricula from './matriculaColumns.jsx';
 
-const Matricula = () => {
+const Matricula = ({ onExcluir }) => {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
     fetch('/matriculas.json')
       .then(response => {
-        if (!response.ok) {
-          throw new Error('Erro ao carregar os dados');
-        }
+        if (!response.ok) throw new Error('Erro ao carregar os dados');
         return response.json();
       })
       .then(data => setTableData(data))
       .catch(error => console.error('Erro ao buscar JSON:', error));
   }, []);
+
+  const excluirMatricula = (id) => {
+    setTableData(prev => prev.filter(m => m.matriculaId !== id));
+  };
 
   return (
     <div className="matricula-page">
@@ -24,7 +26,7 @@ const Matricula = () => {
       <div className="matricula-table-container">
         <Tabletop
           tableData={tableData}
-          columns={columnsMatricula}
+          columns={columnsMatricula({ excluirMatricula })}
           startingTableColumns={[
             'email',
             'cursoId',
@@ -32,8 +34,8 @@ const Matricula = () => {
             'status',
             'matriculaId',
             'mais_info',
-            'acoes' // adiciona explicitamente a coluna 'Ações'
-          ]}          
+            'acoes'
+          ]}
         />
       </div>
     </div>

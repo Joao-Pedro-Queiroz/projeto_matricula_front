@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
-import BotaoExcluir from './BotaoExcluir.jsx'; // Componente do botão de exclusão
 
-const columnsMatricula = [
+const columnsMatricula = ({ cancelarMatricula, excluirMatricula }) => [
   {
     title: 'Email do Aluno',
     dataIndex: 'email',
@@ -40,12 +39,28 @@ const columnsMatricula = [
     title: 'Ações',
     key: 'acoes',
     render: (_, record) => {
-      if (record.status === 'em andamento') {
-        return <BotaoExcluir matriculaId={record.matriculaId} />;
-      }
-      return null;
+      return (
+        <div style={{ display: 'flex', gap: '10px' }}>
+          {}
+          {record.status !== 'cancelada' && (
+            <Link to={`/cancelar/${record.matriculaId}`}>
+              <button className="botao-cancelar">Cancelar</button>
+            </Link>
+          )}
+  
+          {}
+          <button
+            className="botao-excluir"
+            onClick={() => excluirMatricula(record.matriculaId)}
+          >
+            Excluir
+          </button>
+        </div>
+      );
     }
   }
+  
+  
 ];
 
 export default columnsMatricula;
