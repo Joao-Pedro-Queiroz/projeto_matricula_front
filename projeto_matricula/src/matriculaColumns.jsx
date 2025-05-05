@@ -41,14 +41,14 @@ const columnsMatricula = ({ cancelarMatricula, excluirMatricula }) => [
     render: (_, record) => {
       return (
         <div style={{ display: 'flex', gap: '10px' }}>
-          {/* Mostrar botão Cancelar somente se o status NÃO for 'cancelada' */}
+          {}
           {record.status !== 'cancelada' && (
             <Link to={`/cancelar/${record.matriculaId}`}>
               <button className="botao-cancelar">Cancelar</button>
             </Link>
           )}
   
-          {/* Botão Excluir sempre aparece */}
+          {}
           <button
             className="botao-excluir"
             onClick={() => excluirMatricula(record.matriculaId)}

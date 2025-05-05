@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './matricula.css'; // Usa o mesmo CSS da tela principal
+import './matricula.css';
 
 const CancelarMatricula = ({ cancelarMatricula }) => {
   const { id } = useParams();
