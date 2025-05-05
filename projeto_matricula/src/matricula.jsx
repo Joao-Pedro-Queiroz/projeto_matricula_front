@@ -25,7 +25,15 @@ const Matricula = () => {
         <Tabletop
           tableData={tableData}
           columns={columnsMatricula}
-          startingTableColumns={columnsMatricula.map(col => col.dataIndex ?? col.key)}
+          startingTableColumns={[
+            'email',
+            'cursoId',
+            'data',
+            'status',
+            'matriculaId',
+            'mais_info',
+            'acoes' // adiciona explicitamente a coluna 'Ações'
+          ]}          
         />
       </div>
     </div>

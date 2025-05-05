@@ -1,7 +1,9 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import Matricula from './matricula.jsx'
-import { Auth0Provider } from '@auth0/auth0-react'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Matricula from './matricula.jsx';
+import CancelarMatricula from './CancelarMatricula.jsx'; 
+import { Auth0Provider } from '@auth0/auth0-react';
 
 createRoot(document.getElementById('root')).render(
   <Auth0Provider
@@ -12,8 +14,11 @@ createRoot(document.getElementById('root')).render(
       redirect_uri: window.location.origin
     }}
   >
-    <Matricula />
-  </Auth0Provider>,
-)
-
-
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Matricula />} />
+        <Route path="/cancelar/:id" element={<CancelarMatricula />} /> {/* NOVA ROTA */}
+      </Routes>
+    </BrowserRouter>
+  </Auth0Provider>
+);

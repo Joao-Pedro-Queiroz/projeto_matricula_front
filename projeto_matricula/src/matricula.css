@@ -7,6 +7,21 @@
     font-size: 2rem;
     margin-bottom: 1rem;
   }
+
+  .botao-excluir {
+    background-color: #e57373;
+    color: white;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .botao-excluir:hover {
+    background-color: #d32f2f;
+  }
   
   .matricula-table-container {
     padding: 10px;

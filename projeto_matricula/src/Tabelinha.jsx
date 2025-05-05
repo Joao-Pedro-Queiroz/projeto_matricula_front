@@ -16,8 +16,9 @@ const Tabelinha = ({
   onRowClick = () => {}
 }) => {
   const [visibleColumns] = useState(
-    columns.map((col) => col.dataIndex).filter((col) => startingTableColumns.includes(col))
-  );
+    columns.map((col) => col.dataIndex || col.key).filter((col) => startingTableColumns.includes(col))
+  );  
+  
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const onSelectChange = (newSelectedRowKeys) => {
@@ -47,8 +48,9 @@ const Tabelinha = ({
 
   const filteredColumns = updatedColumns.filter(
     (col) =>
-      visibleColumns.includes(col.dataIndex) || col.dataIndex === "mais_informacoes"
+      visibleColumns.includes(col.dataIndex || col.key)
   );
+  
 
   return (
     <Table
