@@ -8,6 +8,21 @@
     margin-bottom: 1rem;
   }
 
+  .botao-cancelar {
+    background-color: #f0ad4e;
+    color: white;
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .botao-cancelar:hover {
+    background-color: #ec971f;
+  }
+  
   .botao-excluir {
     background-color: #e57373;
     color: white;
@@ -22,6 +37,7 @@
   .botao-excluir:hover {
     background-color: #d32f2f;
   }
+  
   
   .matricula-table-container {
     padding: 10px;

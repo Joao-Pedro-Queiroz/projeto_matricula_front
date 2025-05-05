@@ -11,21 +11,21 @@
       "cursoId": "CURSO002",
       "data": "2025-04-10",
       "status": "em andamento",
-      "matriculaId":"MAT001"
+      "matriculaId":"MAT002"
     },
     {
       "email": "maria.oliveira@email.com",
       "cursoId": "CURSO003",
       "data": "2025-01-15",
       "status": "cancelada",
-      "matriculaId":"MAT001"
+      "matriculaId":"MAT003"
     },
     {
       "email": "carlos.pereira@email.com",
       "cursoId": "CURSO001",
       "data": "2025-02-05",
       "status": "em andamento",
-      "matriculaId":"MAT001"
+      "matriculaId":"MAT004"
     }
   ]
   
