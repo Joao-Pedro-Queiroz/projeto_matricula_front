@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import BotaoExcluir from './BotaoExcluir.jsx'; // Componente do botão de exclusão
 
 const columnsMatricula = [
   {
@@ -34,6 +35,16 @@ const columnsMatricula = [
         <button className="botao-ver">Ver</button>
       </Link>
     )
+  },
+  {
+    title: 'Ações',
+    key: 'acoes',
+    render: (_, record) => {
+      if (record.status === 'em andamento') {
+        return <BotaoExcluir matriculaId={record.matriculaId} />;
+      }
+      return null;
+    }
   }
 ];
 
