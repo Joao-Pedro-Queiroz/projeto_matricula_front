@@ -1,61 +1,227 @@
-import React, { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Matricula from './matricula.jsx';
-import CancelarMatricula from './CancelarMatricula.jsx';
-import columnsMatricula from './matriculaColumns.jsx';
-import Tabletop from './Tabelinha.jsx';
+import { useEffect, useState } from 'react'
+import reactLogo from './assets/react.svg'
+import viteLogo from '/vite.svg'
+import './App.css'
+import LoginButton from './components/LoginButton';
+import LogoutButton from './components/LogoutButton'
+import { useAuth0 } from '@auth0/auth0-react';
 
-const App = () => {
-  const [tableData, setTableData] = useState([]);
+function App() {
+  const [token, setToken] = useState(null)
+  const [emailAluno, setEmailAluno] = useState()
+  const [idCurso, setIdCurso] = useState()
+  const [status, setStatus] = useState()
+  const [motivoCancelamento, setMotivoCancelamento] = useState()
+  const [cursos, setCursos] = useState([])
+  const [matriculas, setMatriculas] = useState([])
+  const [roles, setRoles] = useState([])
+
+  const {
+    user,
+    isAuthenticated,
+    isLoading,
+    getAccessTokenSilently
+  } = useAuth0();
 
   useEffect(() => {
-    fetch('/matriculas.json')
-      .then(response => {
-        if (!response.ok) throw new Error('Erro ao carregar os dados');
-        return response.json();
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      console.log('Email:', payload['https://musica-insper.com/email'])
+      console.log('Roles:', payload['https://musica-insper.com/roles'])
+      setRoles(payload['https://musica-insper.com/roles'])
+
+      fetch('http://54.232.22.180:8080/api/cursos', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      }).then(response => { 
+        return response.json()
+      }).then(data => { 
+        setCursos(data)
+      }).catch(error => {
+        alert(error)
       })
-      .then(data => setTableData(data))
-      .catch(error => console.error('Erro ao buscar JSON:', error));
-  }, []);
+    }
+  }, [token])
 
-  const cancelarMatricula = (id) => {
-    setTableData(prev =>
-      prev.map(m =>
-        m.matriculaId === id ? { ...m, status: 'cancelada' } : m
-      )
-    );
-  };
+  useEffect(() => {
+    const fetchToken = async () => {
+      try {
+        const accessToken = await getAccessTokenSilently();
+        setToken(accessToken);
+      } catch (e) {
+        console.error('Erro ao buscar token:', e);
+      }
+    };
 
-  const excluirMatricula = (id) => {
-    setTableData(prev => prev.filter(m => m.matriculaId !== id));
-  };
+    if (isAuthenticated) {
+      fetchToken();
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <LoginButton />;
+  }
+
+  function salvarMatricula() {
+
+    fetch('https://54.94.157.137:8082/matricula', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        'emailAluno': emailAluno,
+        'idCurdo': idCurso,
+        'status': status
+      })
+    }).then(response => { 
+      return response.json()
+    }).catch(error => {
+      alert(error)
+    })
+
+  }
+
+  function listarMatriculas(idCurso) {
+    fetch('https://54.94.157.137:8082/matricula/' + idCurso, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }).then(response => { 
+      return response.json()
+    }).then(data => { 
+      setMatriculas(data)
+    }).catch(error => {
+      alert(error)
+    })
+  }
+
+  function cancelarMatricula(id) {
+    fetch('https://54.94.157.137:8082/matricula/cancelar/' + id, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        'motivoCancelamento': motivoCancelamento
+      })
+    }).then(response => { 
+      return response.json()
+    }).catch(error => {
+      alert(error)
+    })
+  }
+
+  function excluir(id) {
+
+    fetch('https://54.94.157.137:8082/matricula/' + id, {
+      method: 'DELETE',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
+    }).then(response => { 
+      return response.json()
+    }).catch(error => {
+      alert(error)
+    })
+
+  }
 
   return (
-    <Routes>
-      <Route path="/" element={
-        <div className="matricula-page">
-          <h2 className="matricula-title">Gerenciamento de Matrículas</h2>
-          <div className="matricula-table-container">
-            <Tabletop
-              tableData={tableData}
-              columns={columnsMatricula({ excluirMatricula })}
-              startingTableColumns={[
-                'email',
-                'cursoId',
-                'data',
-                'status',
-                'matriculaId',
-                'mais_info',
-                'acoes'
-              ]}
-            />
-          </div>
-        </div>
-      } />
-      <Route path="/cancelar/:id" element={
-        <CancelarMatricula cancelarMatricula={cancelarMatricula} />} />
-    </Routes>
+    <>
+  <div>
+    <img src={user.picture} alt={user.name} />
+    <h2>{user.name}</h2>
+    <p>{user.email}</p>
+    <LogoutButton />
+  </div>
+
+  <h3>Nova Matrícula</h3>
+  <div>
+    <input
+      type="email"
+      placeholder="Email do Aluno"
+      value={emailAluno || ''}
+      onChange={(e) => setEmailAluno(e.target.value)}
+    />
+    <select value={idCurso || ''} onChange={(e) => setIdCurso(e.target.value)}>
+      <option value="">Selecione um curso</option>
+      {cursos.map((curso) => (
+        <option key={curso.id} value={curso.id}>
+          {curso.titulo}
+        </option>
+      ))}
+    </select>
+    <select value={status || ''} onChange={(e) => setStatus(e.target.value)}>
+      <option value="">Selecione o status</option>
+      <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
+      <option value="CONCLUIDO">CONCLUIDO</option>
+      <option value="CANCELADO">CANCELADO</option>
+    </select>
+    <button onClick={salvarMatricula}>Salvar Matrícula</button>
+  </div>
+
+  <h3>Listar Matrículas por Curso</h3>
+  <div>
+    <select onChange={(e) => listarMatriculas(e.target.value)}>
+      <option value="">Selecione um curso</option>
+      {cursos.map((curso) => (
+        <option key={curso.id} value={curso.id}>
+          {curso.titulo}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  <table border="1" style={{ marginTop: '20px' }}>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Email Aluno</th>
+        <th>Curso</th>
+        <th>Data Matrícula</th>
+        <th>Status</th>
+        <th>Motivo Cancelamento</th>
+        <th>Data Cancelamento</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {matriculas.map((matricula) => (
+        <tr key={matricula.id}>
+          <td>{matricula.id}</td>
+          <td>{matricula.emailAluno}</td>
+          <td>{matricula.idCurso}</td>
+          <td>{matricula.dataMatricula}</td>
+          <td>{matricula.status}</td>
+          <td>{matricula.motivoCancelamento}</td>
+          <td>{matricula.dataCancelamento}</td>
+          <td>
+            <button onClick={() => excluir(matricula.id)}>Excluir</button>
+            <button onClick={() => {
+              const motivo = prompt("Informe o motivo do cancelamento:");
+              if (motivo) {
+                setMotivoCancelamento(motivo);
+                cancelarMatricula(matricula.id);
+              }
+            }}>
+              Cancelar
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</>
   );
-};
+}
 
 export default App;
