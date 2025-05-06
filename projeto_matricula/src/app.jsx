@@ -70,7 +70,7 @@ function App() {
 
   function salvarMatricula() {
 
-    fetch('https://54.94.157.137:8082/matricula', {
+    fetch('http://54.94.157.137:8082/matricula', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ function App() {
       },
       body: JSON.stringify({
         'emailAluno': emailAluno,
-        'idCurdo': idCurso,
+        'idCurso': idCurso,
         'status': status
       })
     }).then(response => { 
@@ -90,7 +90,7 @@ function App() {
   }
 
   function listarMatriculas(idCurso) {
-    fetch('https://54.94.157.137:8082/matricula/' + idCurso, {
+    fetch('http://54.94.157.137:8082/matricula/curso/' + idCurso, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + token
@@ -104,14 +104,15 @@ function App() {
     })
   }
 
-  function cancelarMatricula(id) {
-    fetch('https://54.94.157.137:8082/matricula/cancelar/' + id, {
+  function cancelarMatricula(id, motivo) {
+    fetch('http://54.94.157.137:8082/matricula/cancelar/' + id, {
       method: 'PUT',
       headers: {
+        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token
       },
       body: JSON.stringify({
-        'motivoCancelamento': motivoCancelamento
+        'motivoCancelamento': motivo
       })
     }).then(response => { 
       return response.json()
@@ -122,7 +123,7 @@ function App() {
 
   function excluir(id) {
 
-    fetch('https://54.94.157.137:8082/matricula/' + id, {
+    fetch('http://54.94.157.137:8082/matricula/' + id, {
       method: 'DELETE',
       headers: {
         'Authorization': 'Bearer ' + token
@@ -209,8 +210,7 @@ function App() {
             <button onClick={() => {
               const motivo = prompt("Informe o motivo do cancelamento:");
               if (motivo) {
-                setMotivoCancelamento(motivo);
-                cancelarMatricula(matricula.id);
+                cancelarMatricula(matricula.id, motivo);
               }
             }}>
               Cancelar
