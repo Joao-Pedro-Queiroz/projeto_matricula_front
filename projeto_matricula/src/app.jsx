@@ -165,7 +165,6 @@ function App() {
       <option value="">Selecione o status</option>
       <option value="EM_ANDAMENTO">EM ANDAMENTO</option>
       <option value="CONCLUIDO">CONCLUIDO</option>
-      <option value="CANCELADO">CANCELADO</option>
     </select>
     <button onClick={salvarMatricula}>Salvar Matrícula</button>
   </div>
